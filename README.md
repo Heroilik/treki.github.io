@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MusicFlow | YouTube API поиск + плеер + смена фона</title>
-    <!-- YouTube IFrame API -->
+    <title>MusicFlow | YouTube API плеер + поиск</title>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         * {
@@ -14,33 +13,27 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             min-height: 100vh;
             padding: 20px;
-            transition: background 0.4s ease, background-image 0.4s ease;
+            transition: background 0.4s ease;
             background: linear-gradient(145deg, #0b0f1c 0%, #141b2b 100%);
-            background-size: cover;
-            background-position: center;
             background-attachment: fixed;
         }
 
-        /* главный layout: колонки */
         .dashboard {
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
             gap: 28px;
-            backdrop-filter: blur(2px);
         }
 
-        /* Левая колонка - плеер */
         .player-col {
             flex: 2;
             min-width: 280px;
         }
 
-        /* Правая колонка - поиск и результаты */
         .search-col {
             flex: 1.2;
             min-width: 280px;
@@ -51,17 +44,14 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3);
             height: fit-content;
-            transition: all 0.2s;
         }
 
-        /* карточка плеера */
         .player-container {
             background: rgba(18, 25, 40, 0.7);
             backdrop-filter: blur(14px);
             border-radius: 56px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            overflow: hidden;
             padding: 24px 26px 32px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
@@ -71,8 +61,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.3px;
-            display: inline-block;
             margin-bottom: 8px;
         }
 
@@ -84,7 +72,6 @@
             padding-left: 12px;
         }
 
-        /* блок вставки ссылки */
         .input-group {
             background: #0f1422e0;
             border-radius: 80px;
@@ -94,7 +81,6 @@
             padding: 5px 5px 5px 22px;
             margin-bottom: 28px;
             border: 1px solid #2d374b;
-            transition: all 0.2s;
         }
         .input-group:focus-within {
             border-color: #3b82f6;
@@ -108,11 +94,9 @@
             font-size: 1rem;
             color: #f0f3fa;
             outline: none;
-            font-weight: 500;
         }
         .input-group input::placeholder {
             color: #5f6c8a;
-            font-weight: 400;
         }
         .input-group button {
             background: #3b82f6;
@@ -121,13 +105,8 @@
             border-radius: 60px;
             color: white;
             font-weight: 600;
-            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         .input-group button:hover {
             background: #2563eb;
@@ -145,7 +124,6 @@
             font-size: 1.3rem;
             font-weight: 600;
             color: white;
-            word-break: break-word;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -156,7 +134,6 @@
             padding: 4px 12px;
             border-radius: 40px;
             font-size: 0.75rem;
-            font-weight: 500;
             color: #90b4ff;
         }
         .track-name {
@@ -168,22 +145,18 @@
             margin-top: 8px;
             display: flex;
             gap: 20px;
-            flex-wrap: wrap;
         }
 
         .youtube-player-box {
-            position: relative;
             width: 100%;
             background: #00000030;
             border-radius: 32px;
             overflow: hidden;
             margin-bottom: 20px;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
         }
         #youtube-player {
             width: 100%;
             aspect-ratio: 16 / 9;
-            pointer-events: auto;
             border-radius: 24px;
         }
         
@@ -201,7 +174,6 @@
             background: #0e1428b3;
             padding: 8px 18px;
             border-radius: 60px;
-            backdrop-filter: blur(4px);
         }
         .ctrl-btn {
             background: transparent;
@@ -209,17 +181,13 @@
             color: #dce5ff;
             font-size: 1.9rem;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.15s;
             width: 48px;
             height: 48px;
             border-radius: 60px;
+            transition: 0.15s;
         }
         .ctrl-btn:hover {
             background: #2d3a5e;
-            color: white;
             transform: scale(1.02);
         }
         .volume-slider {
@@ -232,17 +200,12 @@
             align-items: center;
             gap: 12px;
         }
-        .volume-slider span {
-            font-size: 1.2rem;
-            color: #a0b3e0;
-        }
         input[type="range"] {
             flex: 1;
             height: 4px;
             -webkit-appearance: none;
             background: #2c385c;
             border-radius: 10px;
-            outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -260,7 +223,7 @@
             padding-top: 12px;
             border-top: 1px solid #253153;
         }
-        /* стили поиска */
+
         .search-header {
             display: flex;
             gap: 10px;
@@ -277,9 +240,6 @@
             font-size: 0.9rem;
             outline: none;
         }
-        .search-header input:focus {
-            border-color: #3b82f6;
-        }
         .search-header button {
             background: #3b82f6;
             border: none;
@@ -288,21 +248,28 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
         }
         .search-header button:hover {
             background: #2563eb;
-            transform: scale(0.97);
         }
-        .api-key-warning {
-            background: #f59e0b20;
-            border-left: 3px solid #f59e0b;
-            padding: 8px 12px;
+
+        .api-status {
+            background: #1e2a3e;
             border-radius: 16px;
-            font-size: 0.7rem;
+            padding: 10px 14px;
             margin-bottom: 16px;
-            color: #ffd966;
+            font-size: 0.75rem;
+            border-left: 3px solid #f59e0b;
         }
+        .api-status.success {
+            border-left-color: #10b981;
+            background: #064e3b30;
+        }
+        .api-status.error {
+            border-left-color: #ef4444;
+            background: #7f1d1d30;
+        }
+
         .results-list {
             max-height: 460px;
             overflow-y: auto;
@@ -324,14 +291,12 @@
         }
         .result-item:hover {
             background: #1e2a4e;
-            transform: scale(0.98);
             border-color: #3b82f6;
         }
         .result-thumb {
             width: 48px;
             height: 48px;
             border-radius: 16px;
-            background: #00000055;
             object-fit: cover;
         }
         .result-info {
@@ -341,21 +306,12 @@
             font-weight: 600;
             color: white;
             font-size: 0.85rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
         .result-channel {
             font-size: 0.7rem;
             color: #9aa9cc;
         }
-        .search-suggest {
-            font-size: 0.7rem;
-            color: #6a7aa8;
-            margin-top: 16px;
-            text-align: center;
-        }
+
         .bg-changer {
             display: flex;
             gap: 10px;
@@ -370,15 +326,13 @@
             border-radius: 40px;
             color: white;
             font-size: 0.75rem;
-            font-weight: 500;
             cursor: pointer;
             transition: 0.2s;
-            backdrop-filter: blur(4px);
         }
         .bg-btn:hover {
             background: #3b82f6;
-            transform: scale(0.96);
         }
+
         footer {
             font-size: 0.7rem;
             text-align: center;
@@ -400,20 +354,16 @@
             .dashboard {
                 flex-direction: column;
             }
-            .player-container {
-                padding: 18px;
-            }
         }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
-    <!-- ЛЕВАЯ КОЛОНКА: ПЛЕЕР -->
     <div class="player-col">
         <div class="player-container">
             <h1>🎵 Музодром</h1>
-            <div class="sub">YouTube API · официальный поиск · смена фона</div>
+            <div class="sub">YouTube API · поиск песен · смена фона</div>
 
             <div class="input-group">
                 <input type="text" id="youtube-url" placeholder="Или вставь ссылку / ID видео">
@@ -437,9 +387,9 @@
 
             <div class="controls">
                 <div class="playback-buttons">
-                    <button class="ctrl-btn" id="play-btn" title="Воспроизвести">▶️</button>
-                    <button class="ctrl-btn" id="pause-btn" title="Пауза">⏸️</button>
-                    <button class="ctrl-btn" id="stop-reset-btn" title="Стоп / сброс">⏹️</button>
+                    <button class="ctrl-btn" id="play-btn">▶️</button>
+                    <button class="ctrl-btn" id="pause-btn">⏸️</button>
+                    <button class="ctrl-btn" id="stop-reset-btn">⏹️</button>
                 </div>
                 <div class="volume-slider">
                     <span>🔊</span>
@@ -447,40 +397,29 @@
                 </div>
             </div>
             <div class="status-msg" id="status-msg">
-                ✨ Вставь ссылку или найди песню справа через YouTube API
+                ✨ Вставляй ссылки или ищи музыку справа
             </div>
-            <footer>
-                💡 Работает с любыми YouTube ссылками / ID
-            </footer>
         </div>
     </div>
 
-    <!-- ПРАВАЯ КОЛОНКА: ПОИСК ЧЕРЕЗ YOUTUBE DATA API + СМЕНА ФОНА -->
     <div class="search-col">
-        <div style="font-weight: 600; margin-bottom: 12px; color:white;">🔍 Поиск песен (YouTube API)</div>
+        <div style="font-weight: 600; margin-bottom: 12px; color:white;">🔍 Поиск песен</div>
         
-        <!-- Блок для ввода API ключа -->
-        <div class="api-key-warning" id="api-key-warning">
-            ⚡ Для работы поиска нужен <strong>YouTube Data API v3 ключ</strong><br>
-            <span style="font-size:0.65rem;">👇 Вставь ключ ниже (получить бесплатно: console.cloud.google.com)</span>
-        </div>
-        <div class="input-group" style="margin-bottom: 16px; background:#0a0f1c; padding: 3px 3px 3px 16px;">
-            <input type="text" id="api-key-input" placeholder="Вставь API ключ (AIza...)" style="font-size:0.8rem;">
-            <button id="save-api-btn" style="padding: 6px 16px;">✅ Сохранить</button>
+        <div id="api-status" class="api-status">
+            ⚙️ Проверка API ключа...
         </div>
         
         <div class="search-header">
-            <input type="text" id="search-input" placeholder="Например: Imagine Dragons, lo-fi, rock" value="chill vibes">
+            <input type="text" id="search-input" placeholder="Например: Imagine Dragons, lo-fi, rock" value="chill music">
             <button id="search-btn">🔎 Найти</button>
         </div>
         <div class="results-list" id="results-list">
-            <div style="text-align:center; padding:20px; color:#9aa9cc;">✨ Введи запрос и нажми «Найти»<br>Предварительно вставь API ключ</div>
+            <div style="text-align:center; padding:20px; color:#9aa9cc;">✨ Введи запрос и нажми «Найти»</div>
         </div>
-        <div class="search-suggest">
-            💡 Популярные запросы: «металл», «рэп 2025», «инструментал», «джаз», «phonk»
+        <div class="search-suggest" style="font-size:0.7rem; color:#6a7aa8; text-align:center; margin-top:16px;">
+            💡 Попробуй: «металл», «рэп», «инструментал», «джаз», «phonk»
         </div>
         
-        <!-- Блок смены фона -->
         <div style="margin-top: 28px;">
             <div style="color:white; font-size:0.8rem; margin-bottom: 8px;">🎨 Сменить фон</div>
             <div class="bg-changer">
@@ -496,12 +435,14 @@
 </div>
 
 <script>
-    // ======================== ПЛЕЕР (YouTube IFrame API) ========================
+    // ======================== ВАШ API КЛЮЧ ========================
+    const API_KEY = 'AIzaSyB-CXxXs0lj-5IkBBJswxncefw-v3UTfB8';
+    
+    // ======================== ПЛЕЕР ========================
     let player = null;
     let playerReady = false;
     let currentVideoId = null;
     
-    // DOM плеера
     const urlInput = document.getElementById('youtube-url');
     const loadBtn = document.getElementById('load-btn');
     const playBtn = document.getElementById('play-btn');
@@ -512,22 +453,18 @@
     const videoIdStatusSpan = document.getElementById('video-id-status');
     const durationStatusSpan = document.getElementById('duration-status');
     const statusMsgDiv = document.getElementById('status-msg');
+    const apiStatusDiv = document.getElementById('api-status');
     
     function setStatusMessage(text, isError = false) {
         statusMsgDiv.innerHTML = isError ? `⚠️ ${text}` : `✨ ${text}`;
-        if (isError) {
-            statusMsgDiv.style.color = "#ffb7a7";
-            setTimeout(() => { if(statusMsgDiv.innerHTML.includes("⚠️")) statusMsgDiv.style.color = "#6f7da0"; }, 3000);
-        } else {
-            statusMsgDiv.style.color = "#6f7da0";
-        }
+        statusMsgDiv.style.color = isError ? "#ffb7a7" : "#6f7da0";
     }
     
     function extractVideoId(url) {
-        if (!url || typeof url !== 'string') return null;
+        if (!url) return null;
         url = url.trim();
         if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
-        let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        let regExp = /^.*(youtu.be\/|v\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         let match = url.match(regExp);
         if (match && match[2] && match[2].length === 11) return match[2];
         const shortsRegex = /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/;
@@ -560,19 +497,10 @@
         }
         if (player && playerReady && player.getDuration) {
             let dur = player.getDuration();
-            if (dur && isFinite(dur) && dur > 0) {
+            if (dur && dur > 0) {
                 let mins = Math.floor(dur / 60);
                 let secs = Math.floor(dur % 60);
                 durationStatusSpan.innerText = `🕒 ${mins}:${secs.toString().padStart(2,'0')}`;
-            } else {
-                setTimeout(() => {
-                    if (player && player.getDuration && player.getDuration() > 0) {
-                        let d = player.getDuration();
-                        let m = Math.floor(d / 60);
-                        let s = Math.floor(d % 60);
-                        durationStatusSpan.innerText = `🕒 ${m}:${s.toString().padStart(2,'0')}`;
-                    }
-                }, 800);
             }
         }
     }
@@ -582,66 +510,62 @@
         if (!player || !playerReady) { window.pendingVideoId = videoId; setStatusMessage("Плеер инициализируется...", false); return false; }
         if (currentVideoId === videoId && startPlaying) {
             player.playVideo();
-            setStatusMessage("Продолжаем слушать");
             return true;
         }
-        setStatusMessage(`Загружаем: ${videoId}`);
+        setStatusMessage(`Загружаем трек...`);
         if (startPlaying) player.loadVideoById(videoId);
-        else player.cueVideoById(videoId);
         currentVideoId = videoId;
         updateTrackMetadata(videoId);
         setTimeout(() => updateTrackMetadata(videoId), 1200);
         return true;
     }
     
-    function playVideo() { if(playerReady && currentVideoId) player.playVideo(); else setStatusMessage("Нет трека или плеер не готов", true); }
+    function playVideo() { if(playerReady && currentVideoId) player.playVideo(); else setStatusMessage("Нет трека", true); }
     function pauseVideo() { if(playerReady) player.pauseVideo(); }
-    function stopAndReset() { if(playerReady && currentVideoId) player.stopVideo(); else setStatusMessage("Нет трека", false); }
-    function setVolume(val) { if(playerReady) player.setVolume(Math.min(100, Math.max(0, val))); }
+    function stopAndReset() { if(playerReady && currentVideoId) player.stopVideo(); }
+    function setVolume(val) { if(playerReady) player.setVolume(val); }
     
-    // ======================== ПОИСК ЧЕРЕЗ YOUTUBE DATA API V3 ========================
-    let currentApiKey = localStorage.getItem('youtube_api_key') || '';
-    const apiKeyInput = document.getElementById('api-key-input');
-    const saveApiBtn = document.getElementById('save-api-btn');
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-    const resultsListDiv = document.getElementById('results-list');
-    const apiWarning = document.getElementById('api-key-warning');
-    
-    if (currentApiKey) {
-        apiKeyInput.value = currentApiKey;
-        apiWarning.style.display = 'none';
-    } else {
-        apiWarning.style.display = 'block';
+    // ======================== ПРОВЕРКА API КЛЮЧА ========================
+    async function testApiKey() {
+        try {
+            const testUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=test&type=video&key=${API_KEY}`;
+            const response = await fetch(testUrl);
+            const data = await response.json();
+            
+            if (data.error) {
+                let errorMessage = '';
+                if (data.error.code === 403) {
+                    errorMessage = '❌ API ключ недействителен или YouTube Data API v3 не включён в проекте. Зайдите в Google Cloud Console → выберите проект → включите YouTube Data API v3';
+                } else if (data.error.code === 400) {
+                    errorMessage = '❌ Ошибка в запросе. Проверьте ключ.';
+                } else {
+                    errorMessage = `❌ Ошибка: ${data.error.message || 'Неизвестная ошибка'}`;
+                }
+                apiStatusDiv.className = 'api-status error';
+                apiStatusDiv.innerHTML = `⚠️ ${errorMessage}<br><small style="display:block; margin-top:6px;">🔧 Решение: перейдите на <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" style="color:#3b82f6;">console.cloud.google.com</a> и включите YouTube Data API v3 для вашего проекта</small>`;
+                return false;
+            } else {
+                apiStatusDiv.className = 'api-status success';
+                apiStatusDiv.innerHTML = '✅ API ключ работает! YouTube Data API v3 активен. Можно искать музыку. 🎵';
+                return true;
+            }
+        } catch (err) {
+            apiStatusDiv.className = 'api-status error';
+            apiStatusDiv.innerHTML = '❌ Не удалось подключиться к Google API. Проверьте интернет-соединение.';
+            return false;
+        }
     }
     
-    saveApiBtn.addEventListener('click', () => {
-        const key = apiKeyInput.value.trim();
-        if (key && key.startsWith('AIza')) {
-            currentApiKey = key;
-            localStorage.setItem('youtube_api_key', key);
-            apiWarning.style.display = 'none';
-            setStatusMessage("✅ API ключ сохранён! Теперь можно искать музыку", false);
-        } else {
-            alert('Введите корректный YouTube API ключ (начинается с AIza)');
-        }
-    });
-    
+    // ======================== ПОИСК ЧЕРЕЗ YOUTUBE API ========================
     async function searchYouTubeVideos(query, maxResults = 12) {
-        if (!currentApiKey) {
-            resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#ffb79e;">🔑 Сначала вставь YouTube API ключ в поле выше и нажми «Сохранить»</div>';
-            return [];
-        }
-        if (!query.trim()) return [];
         try {
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(query)}&type=video&key=${currentApiKey}`;
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}`;
             const response = await fetch(url);
             const data = await response.json();
+            
             if (data.error) {
-                console.error(data.error);
                 let errorMsg = data.error.message || 'Ошибка API';
-                if (data.error.code === 403) errorMsg = 'Неверный ключ или квота исчерпана.';
-                resultsListDiv.innerHTML = `<div style="text-align:center; padding:20px; color:#ffb79e;">❌ Ошибка API: ${errorMsg}</div>`;
+                resultsListDiv.innerHTML = `<div style="text-align:center; padding:20px; color:#ffb79e;">❌ ${errorMsg}<br><br>🔧 Включите YouTube Data API v3 в Google Cloud Console</div>`;
                 return [];
             }
             if (!data.items || data.items.length === 0) return [];
@@ -653,10 +577,14 @@
             }));
         } catch (err) {
             console.error(err);
-            resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#ffb79e;">⚠️ Ошибка сети или API недоступен</div>';
+            resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#ffb79e;">⚠️ Ошибка сети</div>';
             return [];
         }
     }
+    
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const resultsListDiv = document.getElementById('results-list');
     
     async function performSearch() {
         let query = searchInput.value.trim();
@@ -664,13 +592,10 @@
             resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#9aa9cc;">Введите название песни или исполнителя</div>';
             return;
         }
-        if (!currentApiKey) {
-            resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#ffb79e;">🔑 Сначала добавьте YouTube API ключ!</div>';
-            return;
-        }
         resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#9aa9cc;">🔎 Ищем через YouTube API...</div>';
         const items = await searchYouTubeVideos(query, 14);
         if (!items.length) {
+            if (resultsListDiv.innerHTML.includes('Включите YouTube Data API')) return;
             resultsListDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#ffb79e;">😕 Ничего не найдено. Попробуйте другой запрос.</div>';
             return;
         }
@@ -679,7 +604,7 @@
             const div = document.createElement('div');
             div.className = 'result-item';
             div.innerHTML = `
-                <img class="result-thumb" src="${item.thumbnail}" alt="thumb" onerror="this.src='https://i.ytimg.com/vi/${item.id}/default.jpg'">
+                <img class="result-thumb" src="${item.thumbnail}" onerror="this.src='https://i.ytimg.com/vi/${item.id}/default.jpg'">
                 <div class="result-info">
                     <div class="result-title">${escapeHtml(item.title)}</div>
                     <div class="result-channel">${escapeHtml(item.channel)}</div>
@@ -687,7 +612,7 @@
             `;
             div.addEventListener('click', () => {
                 loadVideoById(item.id, true);
-                setStatusMessage(`🎵 Загружено: ${item.title.substring(0, 60)}`);
+                setStatusMessage(`🎵 ${item.title.substring(0, 60)}`);
                 if(urlInput) urlInput.value = `https://youtu.be/${item.id}`;
             });
             resultsListDiv.appendChild(div);
@@ -704,66 +629,64 @@
         });
     }
     
-    // --- СМЕНА ФОНА ---
+    // ======================== СМЕНА ФОНА ========================
     function setBackground(style) {
         const body = document.body;
         switch(style) {
-            case 'gradient':
-                body.style.background = "linear-gradient(145deg, #0b0f1c 0%, #141b2b 100%)";
-                break;
-            case 'dark':
-                body.style.background = "#05070f";
-                break;
-            case 'forest':
-                body.style.background = "url('https://images.pexels.com/photos/2387793/pexels-photo-2387793.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed";
-                break;
-            case 'ocean':
-                body.style.background = "url('https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed";
-                break;
-            case 'sunset':
-                body.style.background = "url('https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed";
-                break;
-            case 'abstract':
-                body.style.background = "url('https://images.pexels.com/photos/1966452/pexels-photo-1966452.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed";
-                break;
+            case 'gradient': body.style.background = "linear-gradient(145deg, #0b0f1c 0%, #141b2b 100%)"; break;
+            case 'dark': body.style.background = "#05070f"; break;
+            case 'forest': body.style.background = "url('https://images.pexels.com/photos/2387793/pexels-photo-2387793.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed"; break;
+            case 'ocean': body.style.background = "url('https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed"; break;
+            case 'sunset': body.style.background = "url('https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed"; break;
+            case 'abstract': body.style.background = "url('https://images.pexels.com/photos/1966452/pexels-photo-1966452.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat fixed"; break;
             default: body.style.background = "linear-gradient(145deg, #0b0f1c 0%, #141b2b 100%)";
         }
         body.style.backgroundSize = "cover";
         body.style.backgroundAttachment = "fixed";
     }
     
-    // --- ИНИЦИАЛИЗАЦИЯ YOUTUBE IFrame API ---
+    // ======================== ИНИЦИАЛИЗАЦИЯ ========================
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('youtube-player', {
             height: '100%', width: '100%', videoId: '',
             playerVars: { autoplay: 0, controls: 0, disablekb: 0, fs: 0, rel: 0, modestbranding: 1 },
             events: {
-                onReady: (e) => { playerReady = true; setVolume(volumeSlider.value); setStatusMessage("Плеер готов! Вставляй ссылку или ищи музыку"); if(window.pendingVideoId) { loadVideoById(window.pendingVideoId); delete window.pendingVideoId; } },
-                onStateChange: (e) => { if(e.data === YT.PlayerState.PLAYING) setStatusMessage("🎶 Воспроизведение"); else if(e.data === YT.PlayerState.PAUSED) setStatusMessage("⏸ Пауза"); else if(e.data === YT.PlayerState.ENDED) setStatusMessage("🏁 Трек завершён"); if(currentVideoId) setTimeout(()=>updateTrackMetadata(currentVideoId),300); },
-                onError: (e) => { setStatusMessage("Ошибка плеера, проверь видео", true); currentVideoId = null; }
+                onReady: (e) => { 
+                    playerReady = true; 
+                    setVolume(volumeSlider.value); 
+                    setStatusMessage("Плеер готов! Ищи музыку справа");
+                    if(window.pendingVideoId) { loadVideoById(window.pendingVideoId); delete window.pendingVideoId; } 
+                },
+                onStateChange: (e) => { 
+                    if(e.data === YT.PlayerState.PLAYING) setStatusMessage("🎶 Воспроизведение");
+                    else if(e.data === YT.PlayerState.PAUSED) setStatusMessage("⏸ Пауза");
+                    if(currentVideoId) setTimeout(()=>updateTrackMetadata(currentVideoId),300);
+                },
+                onError: (e) => { setStatusMessage("Ошибка плеера", true); currentVideoId = null; }
             }
         });
     }
     window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
     if (typeof YT !== 'undefined' && YT.Player) onYouTubeIframeAPIReady();
     
-    // ---- ОБРАБОТЧИКИ ----
-    loadBtn.addEventListener('click', () => { let id = extractVideoId(urlInput.value); if(id) loadVideoById(id, true); else setStatusMessage("Некорректная ссылка YouTube", true); });
+    // Обработчики
+    loadBtn.addEventListener('click', () => { let id = extractVideoId(urlInput.value); if(id) loadVideoById(id, true); else setStatusMessage("Некорректная ссылка", true); });
     playBtn.addEventListener('click', playVideo);
     pauseBtn.addEventListener('click', pauseVideo);
     stopResetBtn.addEventListener('click', stopAndReset);
-    volumeSlider.addEventListener('input', (e) => setVolume(e.target.value));
+    volumeSlider.addEventListener('input', (e) => setVolume(parseInt(e.target.value)));
     searchBtn.addEventListener('click', performSearch);
     searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') performSearch(); });
     document.querySelectorAll('.bg-btn').forEach(btn => {
         btn.addEventListener('click', () => setBackground(btn.getAttribute('data-bg')));
     });
     
-    // авто-поиск при загрузке, если есть ключ
-    setTimeout(() => { 
-        if(currentApiKey && searchInput.value) performSearch(); 
-        else if(!currentApiKey) setStatusMessage("Вставьте API ключ для поиска музыки → справа", false);
-    }, 1200);
+    // Запуск проверки API и авто-поиск
+    testApiKey().then(works => {
+        if (works && searchInput.value) {
+            performSearch();
+        }
+    });
 </script>
 </body>
 </html>
